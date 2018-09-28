@@ -24,16 +24,19 @@ plt.ion()
 fig = plt.figure()
 ax = fig.add_subplot(111)
 line1 = ax.plot(xg, rastrigin(xg))
-step_size_l = [0.1, 0.05, 0.02, 0.01, 0.001]
-colors = ['r', 'y', 'g', 'b', 'm']
+starting_x = [-10, -5, -10, -10]
+step_size_l = [0.1, 0.05, 0.02, 0.01]
+colors = ['r', 'y', 'g', 'b']
+epochs = [20, 20, 40, 80]
 
-for run in range(5):
+for run in range(4):
     step_size = step_size_l[run]
-    x = np.random.uniform(-width, width, 1)
+    x = starting_x[run]
     line2 = ax.scatter(x, rastrigin(x), label='step_size ' + str(step_size), c=col.to_rgb(colors[run]))
+
     ax.legend()
 
-    for _ in range(20):
+    for epoch in range(epochs[run]):
         step = dx_rastrigin(x) * step_size
         x = x - step
 
@@ -41,4 +44,5 @@ for run in range(5):
         line2.set_offsets(np.c_[x, rastrigin(x)])
 
         fig.canvas.draw_idle()
+        fig.savefig('images/grad_descent%04d.png' % (run * 20 + epoch,), bbox_inches='tight')
         plt.pause(0.2)

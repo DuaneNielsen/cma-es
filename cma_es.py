@@ -39,7 +39,7 @@ line3 = None
 mu = torch.Tensor(np.random.uniform(size=1) + 2.0)
 sigma = torch.Tensor(np.random.uniform(size=1) * 5.0)
 
-for _ in range(100):
+for epoch in range(500):
     space = dist.Normal(mu, sigma)
     parameters = space.sample((24,))
     scores = rastrigin(parameters)
@@ -54,13 +54,15 @@ for _ in range(100):
     sigma = torch.sqrt(parameters.var(0))
 
     if line2 is None:
-        line2 = ax.scatter(parameters[best].cpu().numpy(), scores[best].cpu().numpy(), c=color.to_rgb('r'))
-        line3 = ax.scatter(parameters[rest].cpu().numpy(), scores[rest].cpu().numpy(), c=color.to_rgb('b'))
+        line2 = ax.scatter(parameters[best].cpu().numpy(), scores[best].cpu().numpy(), label='the best', c=color.to_rgb('r'))
+        line3 = ax.scatter(parameters[rest].cpu().numpy(), scores[rest].cpu().numpy(), label='the rest', c=color.to_rgb('b'))
+        ax.legend()
     else:
         line2.set_offsets(np.c_[parameters[best].cpu().numpy(), scores[best].cpu().numpy()])
         line3.set_offsets(np.c_[parameters[rest].cpu().numpy(), scores[rest].cpu().numpy()])
     fig.canvas.draw_idle()
-    plt.pause(0.5)
+    fig.savefig('images/cma-es%04d.png' % (epoch,), bbox_inches='tight')
+    plt.pause(0.2)
 
 
 
