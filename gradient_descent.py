@@ -13,7 +13,7 @@ def rastrigin(x):
 def dx_rastrigin(x):
     n = 10
     a = 10
-    return 2 * x + a * np.sin(2 * pi * x)
+    return 2 * x + a * np.sin(2 * pi * x) * 2 * pi
 
 
 n = 200
@@ -24,10 +24,10 @@ plt.ion()
 fig = plt.figure()
 ax = fig.add_subplot(111)
 line1 = ax.plot(xg, rastrigin(xg))
-starting_x = [-10, -5, -10, -10]
-step_size_l = [0.1, 0.05, 0.02, 0.01]
-colors = ['r', 'y', 'g', 'b']
-epochs = [20, 20, 40, 80]
+starting_x = [-10, -5, -10, -10, -10]
+step_size_l = [0.1, 0.05, 0.02, 0.01, 0.005]
+colors = ['r', 'm', 'y', 'g', 'b']
+epochs = [20, 20, 40, 100, 140]
 
 for run in range(4):
     step_size = step_size_l[run]
@@ -37,6 +37,10 @@ for run in range(4):
     ax.legend()
 
     for epoch in range(epochs[run]):
+        grad_x = np.linspace(x, x + 1, 2)
+        grad_y = np.linspace(rastrigin(x), rastrigin(x+1), 2)
+        #line3 = ax.plot(grad_x, grad_y, c=col.to_rgb('r'))
+
         step = dx_rastrigin(x) * step_size
         x = x - step
 
