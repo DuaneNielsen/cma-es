@@ -61,7 +61,7 @@ for epoch in range(500):
         line2.set_offsets(np.c_[parameters[best].cpu().numpy(), scores[best].cpu().numpy()])
         line3.set_offsets(np.c_[parameters[rest].cpu().numpy(), scores[rest].cpu().numpy()])
     fig.canvas.draw_idle()
-    fig.savefig('images/cma-es%04d.png' % (epoch,), bbox_inches='tight')
+    fig.savefig('images/cma%04d.png' % (epoch,), bbox_inches='tight')
     plt.pause(0.2)
 
 

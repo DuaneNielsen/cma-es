@@ -28,6 +28,25 @@ def get_policy(features, actions, depth):
     return nn.Sequential(*blocks, nn.Linear(features, actions), nn.Softmax(dim=0))
 
 
+def load_weights(module, weights):
+
+    start = 0
+    end = 0
+    for p in module.parameters():
+        end += p.numel()
+        p.data = weights[start:end].reshape(p.shape)
+        start += p.numel()
+    return module
+
+
+def flatten(module):
+    return torch.cat([p.flatten() for p in module.parameters()])
+
+
+def parameter_count(module):
+    return sum([p.numel() for p in module.parameters()])
+
+
 class CMA(object):
     def _rank(self, results, rank_order='max'):
         if rank_order == 'max':
@@ -251,5 +270,3 @@ class FastCovarianceMatrixAdaptation(CMA):
         return f'N: {self.N}, samples: {self.samples}, mu: {self.mu}, mueff: {self.mueff}, cc: {self.cc}, ' \
                f'cs: {self.cs}, c1: {self.c1}, cmu: {self.cmu}, damps: {self.damps}, chiN: {self.chiN}, ' \
                f'step_mode: {self.step_mode}, step_decay: {self.step_decay}, step_size: {self.step_size}'
-
-
