@@ -1,6 +1,6 @@
 import torch
 from torch import multiprocessing as mp
-
+import tqdm
 
 def nop(s_t):
     return s_t
@@ -60,7 +60,7 @@ class AtariMpEvaluator(AtariEval):
         worker_args = [encode(self.args, self.datapack, w, self.policy_features, self.policy_depth, self.render) for w in weights]
 
         with mp.Pool(processes=self.workers) as pool:
-            results = pool.map(self.call_evaluate, worker_args)
+            results = list(tqdm.tqdm(pool.imap(self.call_evaluate, worker_args), total=len(worker_args)))
 
         results = torch.tensor(results)
         return results
